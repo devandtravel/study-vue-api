@@ -1,0 +1,36 @@
+{
+  "name": "study-vue-api",
+  "version": "1.0.0",
+  "description": "study rest api with Vue and Express",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devandtravel/study-vue-api.git"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "express",
+    "vue3",
+    "vue",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "devandtravel@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devandtravel/study-vue-api/issues"
+  },
+  "homepage": "https://github.com/devandtravel/study-vue-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
