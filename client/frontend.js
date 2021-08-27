@@ -1,6 +1,7 @@
 Vue.createApp({
   data() {
     return {
+      loading: false,
       form: {
         name: 'defaultName',
         value: '+99999999999'
@@ -14,20 +15,38 @@ Vue.createApp({
     }
   },
   methods: {
-    createContact() {
+    async createContact() {
       const { ...contact } = this.form
-      this.contacts.push({ ...contact, id: Date.now(), marked: false })
+      const newContact = await request('/api/contacts', 'POST', contact)
+      this.contacts.push(newContact)
       this.form.name = this.form.value = ''
+    },
+    async removeContact(id) {
+      this.contacts = this.contacts.filter(contact => contact.id !== id)
+      // const { ...contact } = this.form
+      // const newContact = await request('/api/contacts', 'POST', contact)
+      // this.contacts.push(newContact)
+      // this.form.name = this.form.value = ''
     },
     markContact(id) {
       const contact = this.contacts.find(contact => contact.id === id)
       contact.marked = true
-    },
-    removeContact(id) {
-      this.contacts = this.contacts.filter(contact => contact.id !== id)
     }
+  },
+  async mounted() {
+    this.loading = true
+    this.contacts = await request('/api/contacts')
+    this.loading = false
   }
-}).mount('#app')
+})
+  .component('loader', {
+    template: `<div style="display: flex; justify-content: center; align-items: center;">
+    <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>`
+  })
+  .mount('#app')
 
 async function request(url, method = 'GET', data = null) {
   try {
@@ -36,9 +55,13 @@ async function request(url, method = 'GET', data = null) {
     if (data) {
       headers['Content-Type'] = 'application/json'
       body = JSON.stringify(data)
+      const response = await fetch(url, { method, headers, body })
+      return response.json()
     }
-    const response = await fetch(url, { method, headers, body })
-    return response.json()
+    if (data === null) {
+      const response = await fetch(url, { method, headers })
+      return response.json()
+    }
   } catch (error) {
     console.warn('Warning:', error.message)
   }

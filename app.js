@@ -1,14 +1,24 @@
 import express from 'express'
 import path from 'path'
-
-const CONTACTS = [
-  { id: 1, name: 'exampleName', value: '+19999999999', marked: false }
-]
+import { v4 } from 'uuid'
 
 const __dirname = path.resolve()
 const app = express()
 
+const CONTACTS = [
+  { id: v4(), name: 'exampleName', value: '+19999999999', marked: false }
+]
 
+app.use(express.json())
+
+app.get('/api/contacts', (req, res) => {
+  res.status(200).json(CONTACTS)
+})
+app.post('/api/contacts', (req, res) => {
+  const contact = { ...req.body, id: v4(), marked: false }
+  CONTACTS.push(contact)
+  res.status(201).json(contact)
+})
 
 /* #region START EXPRESS SERVER */
 app
