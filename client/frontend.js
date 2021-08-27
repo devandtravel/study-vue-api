@@ -22,15 +22,13 @@ Vue.createApp({
       this.form.name = this.form.value = ''
     },
     async removeContact(id) {
+      await request(`/api/contacts/${id}`, 'DELETE')
       this.contacts = this.contacts.filter(contact => contact.id !== id)
-      // const { ...contact } = this.form
-      // const newContact = await request('/api/contacts', 'POST', contact)
-      // this.contacts.push(newContact)
-      // this.form.name = this.form.value = ''
     },
-    markContact(id) {
+    async markContact(id) {
       const contact = this.contacts.find(contact => contact.id === id)
-      contact.marked = true
+      const markedContact = await request(`/api/contacts/${id}`, 'PUT', { ...contact, marked: true })
+      contact.marked = markedContact.marked
     }
   },
   async mounted() {
